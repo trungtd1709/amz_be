@@ -6,10 +6,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-
 public class GeneralResponse<T> {
-    @JsonProperty("status")
-    private ResponseStatus status;
+    @JsonProperty("code")
+    private int code;
+
+    @JsonProperty("message")
+    private String message;
+
     @JsonProperty("data")
     private T data;
 
@@ -17,20 +20,15 @@ public class GeneralResponse<T> {
         this.data = data;
     }
 
-    public String toString() {
-        return "{status=" + this.status + ", data=" + this.data.toString() + '}';
-    }
-
-    @JsonProperty("status")
-    public void setStatus(final ResponseStatus status) {
-        this.status = status;
-    }
-
-    @JsonProperty("data")
-    public void setData(final T data) {
-        this.data = data;
-    }
-
     public GeneralResponse() {
+    }
+
+    public void setStatus(final ResponseStatus status) {
+        this.code = status.getCode();
+        this.message = status.getMessage();
+    }
+
+    public String toString() {
+        return "{code=" + this.code + ", message='" + this.message + "', data=" + this.data + '}';
     }
 }
