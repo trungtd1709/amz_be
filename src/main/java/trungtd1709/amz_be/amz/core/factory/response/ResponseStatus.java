@@ -1,31 +1,42 @@
 package trungtd1709.amz_be.amz.core.factory.response;
 
-import com.fasterxml.jackson.annotation.JsonValue;
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.Builder;
 
-@Getter
-public enum ResponseStatus {
-    // Success responses
-    SUCCESS("SUCCESS", "Operation completed successfully"),
-    CREATED("CREATED", "Resource created successfully"),
+import java.io.Serializable;
+import java.util.Date;
 
-    // Client error responses
-    BAD_REQUEST("BAD_REQUEST", "Invalid request parameters"),
-    UNAUTHORIZED("UNAUTHORIZED", "Authentication required"),
-    FORBIDDEN("FORBIDDEN", "Access denied"),
-    NOT_FOUND("NOT_FOUND", "Resource not found"),
-    VALIDATION_ERROR("VALIDATION_ERROR", "Validation failed"),
-    DUPLICATE("DUPLICATE", "Resource already exists"),
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ResponseStatus implements Serializable {
 
-    // Server error responses
-    INTERNAL_SERVER_ERROR("INTERNAL_SERVER_ERROR", "Internal server error occurred"),
-    SERVICE_UNAVAILABLE("SERVICE_UNAVAILABLE", "Service temporarily unavailable");
+    private String code;
 
-    private final String code;
-    private final String message;
+    @JsonProperty("message")
+    private String message;
 
-    ResponseStatus(String code, String message) {
+    @JsonProperty("responseTime")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private Date responseTime;
+
+    @JsonProperty("displayMessage")
+    private String displayMessage;
+
+    /**
+     * Custom constructor that sets message implicitly based on code.
+     */
+    public ResponseStatus(String code, boolean setMessageImplicitly) {
         this.code = code;
-        this.message = message;
+        if (setMessageImplicitly) {
+            // this.message = Translator.toLocale(code);
+            this.message = code;
+        }
+        this.displayMessage = this.message;
     }
 }
