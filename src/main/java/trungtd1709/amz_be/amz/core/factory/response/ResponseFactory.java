@@ -34,7 +34,8 @@ public class ResponseFactory {
     }
 
     private ResponseStatus parseResponseStatus(String code, Map<String, String> params) {
-        ResponseStatus responseStatus = new ResponseStatus(code, true);
+        ResponseStatus responseStatus = new ResponseStatus();
+        responseStatus.setCode(code);
         responseStatus.setMessage(this.replaceParams(responseStatus.getMessage(), params));
         String errorDetail = null;
 //        if (Objects.nonNull(this.errorService)) {
